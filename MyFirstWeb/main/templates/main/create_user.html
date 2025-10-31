@@ -1,0 +1,102 @@
+{% extends 'main/layout.html' %}
+
+{% block title_name %}Создание пользователя{% endblock %}
+
+{% block content %}
+<h1 class="form-title">Форма по созданию пользователя</h1>
+<form method="post" class="modern-form">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label class="form-label">Имя пользователя</label>
+        {{ form.username }}
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Email адрес</label>
+        {{ form.email }}
+    </div>
+
+    {% if error %}
+    <div class="error-message">
+        <span>{{ error }}</span>
+    </div>
+    {% endif %}
+
+    <button class="btn btn-submit" type="submit">Создать пользователя</button>
+</form>
+
+<style>
+.modern-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #3498db;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.error-message {
+    background: #fee;
+    color: #c33;
+    padding: 12px;
+    border-radius: 6px;
+    margin: 1rem 0;
+    border-left: 4px solid #c33;
+}
+</style>
+{% endblock %}
+

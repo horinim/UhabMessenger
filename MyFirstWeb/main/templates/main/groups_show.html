@@ -1,0 +1,268 @@
+{% extends 'main/layout.html' %}
+
+{% block title_name %}Группы пользователей{% endblock %}
+
+{% block content %}
+<div class="groups-container">
+    <h1 class="page-title">Список групп пользователей</h1>
+    <div class="table-wrapper">
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Название группы</th>
+                    <th>Описание</th>
+                    <th>Участник</th>
+                    <th>Дата создания</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for group in groups_list %}
+                <tr class="table-row">
+                    <td class="group-id">{{ group.id }}</td>
+                    <td class="group-name">
+                        <span class="group-icon">👥</span>
+                        {{ group.name }}
+                    </td>
+                    <td class="group-description">
+                        {{ group.discription|truncatewords:10 }}
+                    </td>
+                    <td class="group-user">
+                        {% if group.users_list.all %}
+                    <div class="users-count">
+                        <span class="count-badge">{{ group.users_list.count }} участников</span>
+                        <div class="users-preview">
+                            {% for user in group.users_list.all|slice:":3" %}
+                            <span class="user-tag">{{ user.username }}</span>
+                            {% endfor %}
+                            {% if group.users_list.count > 3 %}
+                            <span class="more-users">+{{ group.users_list.count|add:"-3" }} ещё</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                        {% else %}
+                            <span class="no-user">Участники не добавлены</span>
+                        {% endif %}
+                    </td>
+                    <td class="group-date">{{ group.created_at|date:"d.m.Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr class="empty-row">
+                    <td colspan="5">
+                        <div class="empty-state">
+                            <span class="empty-icon">🏢</span>
+                            <p>Группы не найдены</p>
+                            <a href="{% url 'create_group' %}" class="create-btn">Создать первую группу</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+.groups-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page-title {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.table-wrapper {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.modern-table th {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 1.2rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.modern-table th:first-child {
+    border-top-left-radius: 15px;
+}
+
+.modern-table th:last-child {
+    border-top-right-radius: 15px;
+}
+
+.table-row {
+    border-bottom: 1px solid #f1f3f4;
+    transition: all 0.3s ease;
+}
+
+.table-row:hover {
+    background: linear-gradient(135deg, #f8f9ff, #f0f2ff);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+}
+
+.table-row td {
+    padding: 1.2rem 1rem;
+    color: #2c3e50;
+    font-size: 1rem;
+    vertical-align: top;
+}
+
+.group-id {
+    font-weight: 600;
+    color: #667eea;
+    font-family: 'Courier New', monospace;
+}
+
+.group-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.group-icon {
+    font-size: 1.3rem;
+}
+
+.group-description {
+    color: #7f8c8d;
+    line-height: 1.4;
+    max-width: 250px;
+}
+
+.group-user {
+    min-width: 200px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-avatar-small {
+    font-size: 1rem;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #2c3e50;
+}
+
+.user-email-small {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+}
+
+.no-user {
+    color: #bdc3c7;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.group-date {
+    color: #95a5a6;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.empty-row {
+    background: #f8f9fa;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #7f8c8d;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.1rem;
+}
+
+.create-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.create-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    text-decoration: none;
+    color: white;
+}
+
+/* Анимация появления строк */
+.table-row {
+    animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .groups-container {
+        padding: 1rem;
+    }
+
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .modern-table {
+        min-width: 800px;
+    }
+}
+</style>
+{% endblock %}
