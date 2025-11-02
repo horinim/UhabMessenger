@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.models import User
-from .models import UsersList, GroupUser
-from .forms import UsersListForm, GroupUserForm
+from .models import UsersList, GroupUser, Post
+from .forms import UsersListForm, GroupUserForm, PostCreateForm
 
 def index(request):
     data = {
@@ -61,3 +61,19 @@ def create_group(request):
         'error': error,
     }
     return render(request, 'main/create_group.html', data)
+
+def posts_show(request):
+    posts = Post.objects.all().select_related('author_id', 'group_id')
+    return render(request, 'main/posts_show.html', {'posts_list': posts})
+
+
+def create_post(request):
+    if request.method == 'POST':
+        form = PostCreateForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.save()
+    else:
+        form = PostCreateForm()
+
+    return render(request, 'main/create_post.html', {'form': form})

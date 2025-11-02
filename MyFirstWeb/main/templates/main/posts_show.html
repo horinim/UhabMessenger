@@ -1,10 +1,226 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'main/layout.html' %}
+
+{% block title_name %}Все посты{% endblock %}
+
+{% block content %}
+<div class="posts-container">
+    <h1 class="page-title">Список постов</h1>
+    <div class="table-wrapper">
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Автор</th>
+                    <th>Группа</th>
+                    <th>Содержание</th>
+                    <th>Дата создания</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in posts_list %}
+                <tr class="table-row">
+                    <td class="post-id">{{ post.id }}</td>
+                    <td class="post-author">
+                        <span class="author-avatar">👤</span>
+                        {{ post.author_id.username }}
+                    </td>
+                    <td class="post-group">
+                        {% if post.group_id %}
+                            {{ post.group_id.name }}
+                        {% else %}
+                            <span class="no-group">—</span>
+                        {% endif %}
+                    </td>
+                    <td class="post-content">
+                        <div class="content-preview">
+                            {{ post.content|truncatewords:20 }}
+                        </div>
+                    </td>
+                    <td class="post-date">{{ post.created_at|date:"d.m.Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr class="empty-row">
+                    <td colspan="5">
+                        <div class="empty-state">
+                            <span class="empty-icon">📝</span>
+                            <p>Посты не найдены</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+.posts-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page-title {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.table-wrapper {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.modern-table th {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 1.2rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.modern-table th:first-child {
+    border-top-left-radius: 15px;
+}
+
+.modern-table th:last-child {
+    border-top-right-radius: 15px;
+}
+
+.table-row {
+    border-bottom: 1px solid #f1f3f4;
+    transition: all 0.3s ease;
+}
+
+.table-row:hover {
+    background: linear-gradient(135deg, #f8f9ff, #f0f2ff);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+}
+
+.table-row td {
+    padding: 1.2rem 1rem;
+    color: #2c3e50;
+    font-size: 1rem;
+    vertical-align: top;
+}
+
+.post-id {
+    font-weight: 600;
+    color: #667eea;
+    font-family: 'Courier New', monospace;
+}
+
+.post-author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    min-width: 150px;
+}
+
+.author-avatar {
+    font-size: 1.2rem;
+}
+
+.post-group {
+    min-width: 120px;
+}
+
+.no-group {
+    color: #bdc3c7;
+    font-style: italic;
+}
+
+.post-content {
+    max-width: 400px;
+    min-width: 300px;
+}
+
+.content-preview {
+    line-height: 1.4;
+    color: #34495e;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.post-date {
+    color: #95a5a6;
+    font-size: 0.9rem;
+    min-width: 120px;
+}
+
+.empty-row {
+    background: #f8f9fa;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #7f8c8d;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* Анимация появления строк */
+.table-row {
+    animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .posts-container {
+        padding: 1rem;
+    }
+
+    .post-content {
+        max-width: 200px;
+        min-width: 150px;
+    }
+
+    .modern-table th,
+    .table-row td {
+        padding: 0.8rem 0.5rem;
+        font-size: 0.9rem;
+    }
+}
+</style>
+{% endblock %}

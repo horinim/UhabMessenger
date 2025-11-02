@@ -1,5 +1,5 @@
-from .models import UsersList, GroupUser
-from django.forms import ModelForm, Textarea, TextInput, EmailInput, SelectMultiple
+from .models import UsersList, GroupUser, Post
+from django.forms import ModelForm, Textarea, TextInput, EmailInput, SelectMultiple, Select
 
 
 class UsersListForm(ModelForm):
@@ -40,3 +40,33 @@ class GroupUserForm(ModelForm):
             }),
         }
 
+class PostCreateForm(ModelForm):
+    class Meta:
+        model = Post
+        fields = ['author_id', 'group_id', 'content']
+        widgets = {
+            'author_id': Select(attrs={
+                'class': 'form-select',
+                'placeholder': 'Выберите автора'
+            }),
+            'group_id': Select(attrs={
+                'class': 'form-select',
+                'placeholder': 'Выберите группу (необязательно)'
+            }),
+            'content': Textarea(attrs={
+                'class': 'form-textarea',
+                'placeholder': 'Введите текст поста...',
+                'rows': 5
+            }),
+        }
+        labels = {
+            'author_id': 'Автор поста',
+            'group_id': 'Группа',
+            'content': 'Содержание поста',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['group_id'].required = False
+        self.fields['author_id'].queryset = UsersList.objects.all()
+        self.fields['group_id'].queryset = GroupUser.objects.all()

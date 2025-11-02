@@ -37,7 +37,7 @@ class Post(models.Model):
     author_id = models.ForeignKey(UsersList, on_delete=models.CASCADE, verbose_name="ID автора:")
     group_id = models.ForeignKey(GroupUser, on_delete=models.SET_NULL, null=True, verbose_name="ID группы:")
     content = models.TextField(verbose_name="Информация в посте:")
-    likes_count = None
+    # likes_count = None
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

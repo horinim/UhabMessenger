@@ -8,4 +8,6 @@ urlpatterns = [
     path('users/create', views.create_user, name='create_user'),
     path('groups/create', views.create_group, name='create_group'),
     path('groups/', views.groups_show, name='groups_show'),
+    path('posts/', views.posts_show, name='posts_show'),
+    path('posts/create', views.create_post, name='create_post'),
 ]
