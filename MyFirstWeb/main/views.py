@@ -212,9 +212,15 @@ class GroupListViewSet(viewsets.ModelViewSet):
             404: {"type": "object", "properties": {"error": {"type": "string"}}}
         }
     )
-    @action(detail=True, methods=['delete'], url_path='members/(?P<user_id>[^/.]+)')
-    def remove_member(self, request, pk=None, user_id=None):
-        group = self.get_object()
+    @action(detail=False, methods=['delete'], url_path='groups/(?P<group_id>[^/.]+)/members/(?P<user_id>[^/.]+)')
+    def remove_member(self, request, group_id=None, user_id=None):
+        try:
+            group = GroupUser.objects.get(id=group_id)
+        except GroupUser.DoesNotExist:
+            return Response(
+                {"error": f"Группа с ID {group_id} не найдена"},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
         try:
             user = UsersList.objects.get(id=user_id)
@@ -231,8 +237,7 @@ class GroupListViewSet(viewsets.ModelViewSet):
             )
 
         group.users_list.remove(user)
-
-        serializer = self.get_serializer(group)
+        serializer = GroupUserSerializer(group)
         return Response(serializer.data)
 
 
